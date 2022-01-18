@@ -1,3 +1,2 @@
 bind/key.txt
-node_modules
-npm-debug.log
+src/node_modules
