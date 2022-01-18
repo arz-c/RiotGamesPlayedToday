@@ -3,6 +3,10 @@ services:
   web:
     build: .
     ports:
-      - "80:80"
+      - "443:443"
     volumes:
       - ./bind:/usr/src/app/bind
+      - /etc/letsencrypt/archive/playedtoday.ddns.net:/usr/src/app/bind/playedtoday.ddns.net
+    stdin_open: true
+    tty: true
+    #entrypoint: /bin/bash

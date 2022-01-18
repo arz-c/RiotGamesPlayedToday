@@ -1,11 +1,30 @@
+// Requires
+
+console.log('test');
+
 const express = require('express');
 const path = require('path');
+const http = require('http');
 const https = require('https');
 const fs = require('fs');
 
 const app = express();
 
-const port = 80;
+// HTTPS SSL Certificate
+
+const privateKey = fs.readFileSync('./bind/playedtoday.ddns.net/privkey1.pem', 'utf8');
+const certificate = fs.readFileSync('./bind/playedtoday.ddns.net/cert1.pem', 'utf8');
+const ca = fs.readFileSync('./bind/playedtoday.ddns.net/chain1.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+        ca: ca
+};
+
+const httpsServer = https.createServer(credentials, app);
+
+// Serve
 
 app.use('/serve', express.static(path.join(__dirname, 'serve')));
 
@@ -23,8 +42,7 @@ app.get('/api', (req, res) => {
                 str += d;
             })
             res2.on('end', () => {
-                //console.log(str);
-                //console.log(req2.data);
+                console.log(str);
                 res.send(str);
             })
         });
@@ -32,6 +50,4 @@ app.get('/api', (req, res) => {
     })
 })
 
-app.listen(port, () => {
-    console.log(`Server is listening on port: ${port}`);
-})
+httpsServer.listen(443);
