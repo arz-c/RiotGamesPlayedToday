@@ -19,7 +19,7 @@ function httpGet(url, callback) {
 }
 
 let chart;
-let userInfo;
+let summonerName;
 
 let name;
 let matches;;
@@ -39,23 +39,28 @@ function submit() {
 
 function startChain() {
     // Getting user info
-    httpGet(`/api?hostname=na1.api.riotgames.com&path=/lol/summoner/v4/summoners/by-name/${name}?api_key=$key`, res => {
-        userInfo = JSON.parse(res);
-        iterateMatches("lol", matches.lol, drawGraph);
-        iterateMatches("tft", matches.tft, drawGraph);
+    httpGet(`/api?hostname=na1.api.riotgames.com&path=/lol/summoner/v4/summoners/by-name/${name}?api_key=$lolkey`, res1 => {
+	let temp = JSON.parse(res1);
+        let lolpuuid = temp.puuid;
+	name = temp.name;
+        httpGet(`/api?hostname=na1.api.riotgames.com&path=/tft/summoner/v1/summoners/by-name/${name}?api_key=$tftkey`, res2 => {
+            let tftpuuid = JSON.parse(res2).puuid;
+            iterateMatches("lol", "v5", lolpuuid, matches.lol, drawGraph);
+            iterateMatches("tft", "v1", tftpuuid, matches.tft, drawGraph);
+        })
     })
 }
 
-function iterateMatches(game, m, callback) {
+function iterateMatches(game, ver, puuid,  m, callback) {
     // Getting user's recent match history
-    httpGet(`/api?hostname=americas.api.riotgames.com&path=/${game}/match/${game == "lol" ? "v5" : "v1"}/matches/by-puuid/${userInfo.puuid}/ids?api_key=$key`, res => {
+    httpGet(`/api?hostname=americas.api.riotgames.com&path=/${game}/match/${ver}/matches/by-puuid/${puuid}/ids?api_key=$${game}key`, res => {
         let matchIDs = JSON.parse(res);
         let len = Math.min(matchIDs.length, 8) // setting max for API rate limits
         reqLen += len;
         // Looping through each match
         for(let i = 0; i < len; i++) {
             // Getting match's details
-            httpGet(`/api?hostname=americas.api.riotgames.com&path=/${game}/match/${game == "lol" ? "v5" : "v1"}/matches/${matchIDs[i]}?api_key=$key`, res => {
+            httpGet(`/api?hostname=americas.api.riotgames.com&path=/${game}/match/${ver}/matches/${matchIDs[i]}?api_key=$${game}key`, res => {
                 reqCounter += 1;
                 let match = JSON.parse(res); 
                 // Checking if match occured less than 24 hours ago
@@ -101,7 +106,7 @@ function drawGraph() {
             plugins: {
                 title: {
                     display: true,
-                    text: `${userInfo.name}'s Time Played In Last ${LAST_X_HOURS} Hours`,
+                    text: `${name}'s Time Played In Last ${LAST_X_HOURS} Hours`,
                     font: {size: 20},
                     color: "rgb(200, 200, 200)"
                 }

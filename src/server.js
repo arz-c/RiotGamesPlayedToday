@@ -1,7 +1,5 @@
 // Requires
 
-console.log('test');
-
 const express = require('express');
 const path = require('path');
 const http = require('http');
@@ -34,15 +32,18 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api', (req, res) => {
-    fs.readFile('bind/key.txt', (err, data) => {
-        let url = "https://" + req.query.hostname + req.query.path.replace("$key", data);
+    fs.readFile('bind/key.txt', 'utf8', (err, data) => {
+        let lolKey = data.match('lol=(.*)')[1];
+        let tftKey = data.match('tft=(.*)')[1];
+        let url = 'https://' + req.query.hostname + req.query.path.replace('$lolkey', lolKey).replace('$tftkey', tftKey);
+        console.log('API request to:', url)
         const req2 = https.get(url, res2 => {
             let str = '';
             res2.on('data', (d) => {
                 str += d;
             })
             res2.on('end', () => {
-                console.log(str);
+                //console.log(str);
                 res.send(str);
             })
         });
@@ -51,3 +52,4 @@ app.get('/api', (req, res) => {
 })
 
 httpsServer.listen(443);
+console.log('Listening on port 443')
