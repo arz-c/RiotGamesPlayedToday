@@ -24,10 +24,15 @@ const httpsServer = https.createServer(credentials, app);
 
 // Serve
 
+function writeToLog(req, message) {
+    fs.appendFile('bind/log.txt', `${req.connection.remoteAddress || req.connection.remoteAddress}: ${message}\n`, 'utf8', err => {});
+}
+
 app.use('/serve', express.static(path.join(__dirname, 'serve')));
 
 app.get('/', (req, res) => {
     console.log('Open request');
+    writeToLog(req, 'Open request');
     res.sendFile(path.join(__dirname, 'serve/index.html'));
 })
 
@@ -36,7 +41,8 @@ app.get('/api', (req, res) => {
         let lolKey = data.match('lol=(.*)')[1];
         let tftKey = data.match('tft=(.*)')[1];
         let url = 'https://' + req.query.hostname + req.query.path.replace('$lolkey', lolKey).replace('$tftkey', tftKey);
-        console.log('API request to:', url)
+        console.log('API request to', url)
+        writeToLog(req, `API request to ${url}`);
         const req2 = https.get(url, res2 => {
             let str = '';
             res2.on('data', (d) => {
