@@ -8,3 +8,4 @@ The website should be available at https://playedtoday.ddns.net/
 - The Riot Games API key can be dynamically edited at bind/key.txt
 - A dynamic DNS service (noip.com) was used to get the domain. The server is actually running on a GCP server
 - The SSL certificate was created using Let's Encrypt and auto-renewel is set up using Certbot's standalone plugin
+- Log entries are saved in bind/log.txt
