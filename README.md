@@ -1,4 +1,4 @@
-# Riot-Games-Played-Today
+# RiotGamesPlayedToday
 A website that displays time played across League of Legends and Teamfight Tactics using the Riot Games API.
 The website should be available at https://playedtoday.ddns.net/
 
