@@ -7,5 +7,5 @@ The website should be available at (OUT OF SERVICE:) https://playedtoday.ddns.ne
 - The bind folder is bind mounted to the container
 - The Riot Games API key can be dynamically edited at bind/key.txt
 - A dynamic DNS service (noip.com) was used to get the domain. The server is actually running on a GCP server
-- The SSL certificate was created using Let's Encrypt and auto-renewel is set up using Certbot's standalone plugin
+- The SSL certificate was created using Let's Encrypt and auto-renewal is set up using Certbot's standalone plugin
 - Log entries are saved in bind/log.txt
