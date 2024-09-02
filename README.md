@@ -1,6 +1,6 @@
 # RiotGamesPlayedToday
 A website that displays time played across League of Legends and Teamfight Tactics using the Riot Games API.
-The website should be available at https://playedtoday.ddns.net/
+The website should be available at (OUT OF SERVICE:) https://playedtoday.ddns.net/
 
 ## Technical Details:
 - The server is running in a Docker container which was created via a Dockerfile and docker-compose
